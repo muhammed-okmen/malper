@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="kmr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Gotar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main id="page"></main>
+
+<script src="articles.js"></script>
+<script src="site.js"></script>
+<script>
+const want = new URLSearchParams(location.search).get("g");
+const i = ARTICLES.findIndex(a => idOf(a) === want);
+const page = $("#page");
+
+if (i < 0) {
+  page.innerHTML = `
+    <section class="head"><div class="in">
+      <p class="eyebrow">Gotar</p>
+      <h1>Ev gotar nehat dîtin.</h1>
+    </div></section>
+    <section class="sec"><div class="in">
+      <p>Dibe ku girêdan kevn be an navê pelê hatibe guhertin.</p>
+      <a class="btn teal" href="index.html#gotar">Hemû gotaran bibîne</a>
+    </div></section>`;
+} else {
+  const a = ARTICLES[i], newer = ARTICLES[i - 1], older = ARTICLES[i + 1];
+  document.title = a.title;
+  const tagLinks = a.tags.map(t => `<a href="${topicUrl(t)}">${esc(t)}</a>`).join(" · ");
+  page.innerHTML = `
+    <section class="head"><div class="in">
+      <a class="back" href="index.html#gotar">‹ Hemû gotar</a>
+      <p class="eyebrow">${esc(a.date.slice(0,4))}${tagLinks ? " · " + tagLinks : ""}</p>
+      <h1>${esc(a.title)}</h1>
+      ${a.author ? `<p class="by">${esc(a.author)}</p>` : ""}
+    </div></section>
+    <section class="sec"><div class="in">
+      <div class="split">
+        <div>
+          <p class="eyebrow">Kurte</p>
+          <div class="btns">
+            <a class="btn teal" href="${esc(a.file)}" target="_blank" rel="noopener">PDF veke</a>
+            <a class="btn line" href="${esc(a.file)}" download>Daxîne</a>
+          </div>
+        </div>
+        <div class="rule prose">
+          <p>${a.abstract ? esc(a.abstract) : "Ji bo vê gotarê kurte nehatiye nivîsandin."}</p>
+        </div>
+      </div>
+      <iframe class="viewer" src="${esc(a.file)}#view=FitH" title="${esc(a.title)}"></iframe>
+      <p class="hint">Eger PDF li vir xuya nebe, bişkoka "PDF veke" bi kar bîne.</p>
+      ${older || newer ? `<nav class="pager" aria-label="Gotarên din">
+        <div>${older ? `<a href="${pageOf(older)}"><small>‹ Gotara kevntir</small>${esc(older.title)}</a>` : ""}</div>
+        <div class="next">${newer ? `<a href="${pageOf(newer)}"><small>Gotara nûtir ›</small>${esc(newer.title)}</a>` : ""}</div>
+      </nav>` : ""}
+    </div></section>`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="kmr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Gotar û Lêkolîn</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Manrope:wght@400;500;650;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main>
+  <section class="hero">
+    <div class="in">
+      <div>
+        <p class="eyebrow">Gotar û lêkolînên bi kurmancî</p>
+        <h1>Zanist û raman, bi zimanê kurdî.</h1>
+        <p class="lead">Li vir gotarên ku min bi kurmancî nivîsandine tên weşandin. Her gotar bi LaTeX hatiye amadekirin û wekî PDF tê xwendin an daxistin.</p>
+        <div class="btns">
+          <a class="btn gold" href="#gotar">Gotaran bibîne</a>
+          <a class="btn ghost" href="derbare.html">Derbarê malperê</a>
+        </div>
+      </div>
+      <aside class="latest" aria-labelledby="lt">
+        <p class="eyebrow" id="lt">Gotarên dawî</p>
+        <ol id="latest"></ol>
+      </aside>
+    </div>
+  </section>
+
+  <section class="sec" id="gotar">
+    <div class="in">
+      <div class="split">
+        <div>
+          <p class="eyebrow">Arşîv</p>
+          <h2>Hemû gotar, li gorî salê rêzkirî</h2>
+        </div>
+        <div class="rule">
+          <p>Bi peyvekê bigere an mijarekê hilbijêre. Lêgerîn li sernav, nivîskar, kurte û mijaran dinêre.</p>
+        </div>
+      </div>
+      <div class="tools">
+        <input type="search" id="q" placeholder="Li gotaran bigere" aria-label="Li gotaran bigere">
+        <div class="chips" id="chips"></div>
+      </div>
+      <p class="count" id="count" aria-live="polite"></p>
+      <div id="list"></div>
+    </div>
+  </section>
+
+  <section class="band" id="mijar">
+    <div class="in split">
+      <div>
+        <p class="eyebrow">Mijar</p>
+        <h2>Gotar li ser çi ne</h2>
+      </div>
+      <ul class="topics" id="topics"></ul>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="in">
+      <p class="eyebrow">Têkilî</p>
+      <h2>Pirs, rexne an pêşniyarek te heye?</h2>
+      <p>Ji bo her gotarê tu dikarî rasterast ji min re binivîsî.</p>
+      <a class="btn navy" data-email href="derbare.html#tekili">E-name bişîne</a>
+    </div>
+  </section>
+</main>
+
+<script src="articles.js"></script>
+<script src="site.js"></script>
+<script>
+const list = $("#list"), chips = $("#chips"), q = $("#q"), count = $("#count");
+const tagCount = {};
+ARTICLES.forEach(a => a.tags.forEach(t => tagCount[t] = (tagCount[t] || 0) + 1));
+const tags = Object.keys(tagCount).sort((a, b) => a.localeCompare(b, "tr"));
+const wanted = new URLSearchParams(location.search).get("mijar");
+let activeTag = tags.includes(wanted) ? wanted : null;
+
+function setTag(t){ activeTag = t; drawChips(); render(); }
+
+function drawChips(){
+  chips.innerHTML = "";
+  [null, ...tags].forEach(t => {
+    const b = document.createElement("button");
+    b.className = "chip"; b.type = "button";
+    b.textContent = t ?? "Hemû";
+    b.setAttribute("aria-pressed", String(activeTag === t));
+    b.onclick = () => setTag(t);
+    chips.appendChild(b);
+  });
+}
+
+function render(){
+  const term = norm(q.value.trim());
+  const hits = ARTICLES.filter(a =>
+    (!activeTag || a.tags.includes(activeTag)) &&
+    (!term || norm([a.title, a.author, a.abstract, a.tags.join(" ")].join(" ")).includes(term))
+  );
+  count.textContent = hits.length + " gotar";
+  if (!hits.length){ list.innerHTML = '<p class="empty">Tiştek nehat dîtin. Peyveke din biceribîne an mijara "Hemû" hilbijêre.</p>'; return; }
+  list.innerHTML = hits.map(a => `
+    <article class="art">
+      <div class="yr">${esc(a.date.slice(0,4))}</div>
+      <div>
+        <h3><a href="${pageOf(a)}">${esc(a.title)}</a></h3>
+        ${a.author ? `<p class="by">${esc(a.author)}</p>` : ""}
+        ${a.abstract ? `<p class="abs">${esc(a.abstract)}</p>` : ""}
+        <div class="meta">
+          <a href="${pageOf(a)}">Bixwîne</a>
+          <a href="${esc(a.file)}" download>PDF daxîne</a>
+          <span>${a.tags.map(esc).join(", ")}</span>
+        </div>
+      </div>
+    </article>`).join("");
+}
+
+$("#latest").innerHTML = ARTICLES.slice(0, 3).map(a => `
+  <li><a href="${pageOf(a)}">${esc(a.title)}</a>
+  <small>${esc(a.date.slice(0,4))}${a.tags.length ? ", " + a.tags.map(esc).join(", ") : ""}</small></li>`).join("")
+  || "<li>Hîn gotar tune ne.</li>";
+
+const topics = $("#topics");
+tags.forEach(t => {
+  const li = document.createElement("li"), b = document.createElement("button"), n = document.createElement("small");
+  b.type = "button"; b.textContent = t; n.textContent = tagCount[t];
+  b.onclick = () => { setTag(t); $("#gotar").scrollIntoView(); };
+  li.append(b, n); topics.appendChild(li);
+});
+
+q.addEventListener("input", render);
+drawChips(); render();
+</script>
+</body>
+</html>
