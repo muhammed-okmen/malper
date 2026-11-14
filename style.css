@@ -127,3 +127,15 @@ footer nav a:hover,footer a:hover{color:var(--gold)}
 .prose p{margin:0 0 16px;max-width:64ch}
 @media (max-width:760px){.viewer{height:70vh}.pager{grid-template-columns:1fr}.pager .next{text-align:start}}
 section[id]{scroll-margin-top:84px}
+
+/* Wêne */
+.fig{margin:0}
+.fig img{display:block;width:100%;height:auto;border-radius:16px}
+.fig figcaption{font-size:.84rem;margin-top:10px;color:var(--mute)}
+.hero .fig figcaption{color:#fff;opacity:.85}
+.hero .latest{margin:0 0 26px}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center}
+.duo h2{margin-bottom:14px}
+.duo p{margin:0 0 14px;max-width:34em}
+.band .fig figcaption{color:#fff;opacity:.8}
+@media (max-width:760px){.duo{grid-template-columns:1fr;gap:26px}}

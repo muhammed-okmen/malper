@@ -19,15 +19,19 @@
         <p class="eyebrow">Gotar û lêkolînên bi kurmancî</p>
         <h1>Zanist û raman, bi zimanê kurdî.</h1>
         <p class="lead">Li vir gotarên ku min bi kurmancî nivîsandine tên weşandin. Her gotar bi LaTeX hatiye amadekirin û wekî PDF tê xwendin an daxistin.</p>
+        <aside class="latest" aria-labelledby="lt">
+          <p class="eyebrow" id="lt">Gotara dawî</p>
+          <ol id="latest"></ol>
+        </aside>
         <div class="btns">
           <a class="btn gold" href="#gotar">Gotaran bibîne</a>
           <a class="btn ghost" href="derbare.html">Derbarê malperê</a>
         </div>
       </div>
-      <aside class="latest" aria-labelledby="lt">
-        <p class="eyebrow" id="lt">Gotarên dawî</p>
-        <ol id="latest"></ol>
-      </aside>
+      <figure class="fig">
+        <img src="img/texte.svg" alt="Texteyeke reş bi kevan, sêgoşe û formulan" width="600" height="420">
+        <figcaption>Fizîk û matematîk, bi kurmancî.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -61,12 +65,20 @@
     </div>
   </section>
 
-  <section class="cta">
-    <div class="in">
-      <p class="eyebrow">Têkilî</p>
-      <h2>Pirs, rexne an pêşniyarek te heye?</h2>
-      <p>Ji bo her gotarê tu dikarî rasterast ji min re binivîsî.</p>
-      <a class="btn navy" data-email href="derbare.html#tekili">E-name bişîne</a>
+  <section class="sec">
+    <div class="in duo">
+      <figure class="fig">
+        <img src="img/rupel.svg" alt="Rûpelên gotareke zanistî bi formul û grafîkekê" width="600" height="420" loading="lazy">
+      </figure>
+      <div>
+        <p class="eyebrow">Ji LaTeX heta PDF</p>
+        <h2>Her gotar wekî PDF tê weşandin</h2>
+        <p>Gotar bi LaTeX tên nivîsandin. Tu dikarî wan li ser malperê bixwînî an wekî PDF daxînî.</p>
+        <div class="btns">
+          <a class="btn teal" href="#gotar">Gotaran bixwîne</a>
+          <a class="btn line" href="derbare.html">Derbarê</a>
+        </div>
+      </div>
     </div>
   </section>
 </main>
@@ -102,6 +114,7 @@ function render(){
     (!term || norm([a.title, a.author, a.abstract, a.tags.join(" ")].join(" ")).includes(term))
   );
   count.textContent = hits.length + " gotar";
+  if (!ARTICLES.length){ list.innerHTML = '<p class="empty">Hîn gotar nehatine weşandin.</p>'; return; }
   if (!hits.length){ list.innerHTML = '<p class="empty">Tiştek nehat dîtin. Peyveke din biceribîne an mijara "Hemû" hilbijêre.</p>'; return; }
   list.innerHTML = hits.map(a => `
     <article class="art">
@@ -119,7 +132,8 @@ function render(){
     </article>`).join("");
 }
 
-$("#latest").innerHTML = ARTICLES.slice(0, 3).map(a => `
+if (!tags.length) $("#mijar").hidden = true;
+$("#latest").innerHTML = ARTICLES.slice(0, 2).map(a => `
   <li><a href="${pageOf(a)}">${esc(a.title)}</a>
   <small>${esc(a.date.slice(0,4))}${a.tags.length ? ", " + a.tags.map(esc).join(", ") : ""}</small></li>`).join("")
   || "<li>Hîn gotar tune ne.</li>";
