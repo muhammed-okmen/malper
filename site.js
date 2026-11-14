@@ -2,7 +2,8 @@
 const SITE = {
   name: "GOTAR",
   tagline: "Gotar û lêkolînên bi kurmancî",
-  motto: "Zanist · Ziman · Raman"
+  motto: "Zanist · Ziman · Raman",
+  counter: "muhammedokmen"        // koda GoatCounter; vala bihêle da ku jimartin raweste
 };
 
 /* Gotar ji articles.js tên xwendin (python3 build.py ew çêdike). */
@@ -40,4 +41,18 @@ document.addEventListener("DOMContentLoaded", () => {
   document.body.append(foot);
 
   document.querySelectorAll("[data-site-name]").forEach(e => e.textContent = SITE.name);
+
+  /* Jimartina serdanan (GoatCounter, bê cookie). Vekirin û daxistina PDF'an jî tê jimartin. */
+  if (SITE.counter) {
+    document.querySelectorAll('a[href$=".pdf"]').forEach(a => {
+      const f = a.getAttribute("href");
+      a.dataset.goatcounterClick = (a.hasAttribute("download") ? "daxistin: " : "vekirin: ") + f;
+      a.dataset.goatcounterTitle = f.split("/").pop();
+    });
+    const gc = document.createElement("script");
+    gc.async = true;
+    gc.src = "https://gc.zgo.at/count.js";
+    gc.dataset.goatcounter = "https://" + SITE.counter + ".goatcounter.com/count";
+    document.head.append(gc);
+  }
 });
