@@ -18,7 +18,7 @@
       <div>
         <p class="eyebrow">Gotar û lêkolînên bi kurmancî</p>
         <h1>Zanist û raman, bi zimanê kurdî.</h1>
-        <p class="lead">Li vir gotarên ku min bi kurmancî nivîsandine tên weşandin. Her gotar bi LaTeX hatiye amadekirin û wekî PDF tê xwendin an daxistin.</p>
+        <p class="lead">Li vir gotarên ku min bi kurmancî nivîsandine tên parvekirin. Her gotar bi LaTeX hatiye amadekirin û wekî PDF tê xwendin an daxistin.</p>
         <aside class="latest" aria-labelledby="lt">
           <p class="eyebrow" id="lt">Gotara dawî</p>
           <ol id="latest"></ol>
@@ -72,7 +72,7 @@
       </figure>
       <div>
         <p class="eyebrow">Ji LaTeX heta PDF</p>
-        <h2>Her gotar wekî PDF tê weşandin</h2>
+        <h2>Her gotar wekî PDF tê parvekirin</h2>
         <p>Gotar bi LaTeX tên nivîsandin. Tu dikarî wan li ser malperê bixwînî an wekî PDF daxînî.</p>
         <div class="btns">
           <a class="btn teal" href="#gotar">Gotaran bixwîne</a>
@@ -114,13 +114,14 @@ function render(){
     (!term || norm([a.title, a.author, a.abstract, a.tags.join(" ")].join(" ")).includes(term))
   );
   count.textContent = hits.length + " gotar";
-  if (!ARTICLES.length){ list.innerHTML = '<p class="empty">Hîn gotar nehatine weşandin.</p>'; return; }
+  if (!ARTICLES.length){ list.innerHTML = '<p class="empty">Hîn gotar nehatine zêdekirin.</p>'; return; }
   if (!hits.length){ list.innerHTML = '<p class="empty">Tiştek nehat dîtin. Peyveke din biceribîne an mijara "Hemû" hilbijêre.</p>'; return; }
   list.innerHTML = hits.map(a => `
     <article class="art">
       <div class="yr">${esc(a.date.slice(0,4))}</div>
       <div>
         <h3><a href="${pageOf(a)}">${esc(a.title)}</a></h3>
+        ${a.status ? `<span class="badge">${esc(a.status)}</span>` : ""}
         ${a.author ? `<p class="by">${esc(a.author)}</p>` : ""}
         ${a.abstract ? `<p class="abs">${esc(a.abstract)}</p>` : ""}
         <div class="meta">
@@ -135,7 +136,7 @@ function render(){
 if (!tags.length) $("#mijar").hidden = true;
 $("#latest").innerHTML = ARTICLES.slice(0, 2).map(a => `
   <li><a href="${pageOf(a)}">${esc(a.title)}</a>
-  <small>${esc(a.date.slice(0,4))}${a.tags.length ? ", " + a.tags.map(esc).join(", ") : ""}</small></li>`).join("")
+  <small>${a.status ? esc(a.status) + ", " : ""}${esc(a.date.slice(0,4))}${a.tags.length ? ", " + a.tags.map(esc).join(", ") : ""}</small></li>`).join("")
   || "<li>Hîn gotar tune ne.</li>";
 
 const topics = $("#topics");

@@ -40,6 +40,7 @@ if (i < 0) {
       <a class="back" href="index.html#gotar">‹ Hemû gotar</a>
       <p class="eyebrow">${esc(a.date.slice(0,4))}${tagLinks ? " · " + tagLinks : ""}</p>
       <h1>${esc(a.title)}</h1>
+      ${a.status ? `<span class="badge">${esc(a.status)}</span>` : ""}
       ${a.author ? `<p class="by">${esc(a.author)}</p>` : ""}
     </div></section>
     <section class="sec"><div class="in">
